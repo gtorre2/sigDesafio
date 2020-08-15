@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org"
+	layout:decorate="~{layout/LayoutPadrao}"
+	xmlns:Sig="http://sig.com.br"
+	xmlns:data="http://www.thymeleaf.org/extras/data">
+
+<head>
+	<title>Cadastro de empresa</title>
+</head>
+
+<section layout:fragment="conteudo">
+
+	<div class="page-header">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-10">
+					<h1>Cadastro de empresa</h1>
+				</div>
+			
+				<div class="col-sm-2">
+					<div class="aw-page-header-controls">
+						<a class="btn  btn-default" th:href="@{/empresas}">
+							<i class="glyphicon  glyphicon-plus-sign"></i> <span class="hidden-xs  hidden-sm">Pesquisa</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		<form method="POST" th:object="${empresa}" 
+				th:action="${empresa.novo} ? @{/empresas/novo} : @{/empresas/{codigo}(codigo=${empresa.codigo})}">
+			<Sig:message/>
+			
+			<input type="hidden" th:field="*{codigo}"/>
+			
+			<div class="row">
+				<div class="form-group  col-sm-6  Sig-required" Sig:classforerror="nome">
+					<label for="nome" class="control-label">Nome</label>
+					<input type="text" class="form-control" id="nome" autofocus="autofocus" th:field="*{nome}"/>
+				</div>
+				
+				<div class="form-group  col-sm-6  Sig-required" Sig:classforerror="apelido">
+					<label for="apelido" class="control-label">Nome</label>
+					<input type="text" class="form-control" id="apelido" th:field="*{apelido}"/>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="form-group  col-sm-4  Sig-required" Sig:classforerror="tipoEmpresa">
+					<label class="control-label">Tipo empresa</label> 
+					<div>
+						<th:block th:each="tipoEmpresa : ${tiposEmpresas}">
+							<div class="radio  radio-inline">
+								<input type="radio" th:id="|id_${tipoEmpresa}|" class="js-radio-tipo-empresa" 
+									th:field="*{tipoEmpresa}" th:value="${tipoEmpresa}" 
+									data:documento="${tipoEmpresa.documento}" data:mascara="${tipoEmpresa.mascara}"> 
+								<label class="control-label" th:for="|id_${tipoEmpresa}|" th:text="${tipoEmpresa.descricao}">Física</label>
+							</div>
+						</th:block>
+					</div>
+				</div>
+				
+				<div class="form-group  col-sm-8  Sig-required" Sig:classforerror="cpfOuCnpj">
+					<label for="cpfOuCnpj" class="control-label">CPF/CNPJ</label>
+					<input type="text" class="form-control" id="cpfOuCnpj" th:field="*{cpfOuCnpj}" disabled/>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="form-group  col-sm-4">
+					<label for="telefone">Telefone</label>
+					<input type="text" class="form-control  js-phone-number" id="telefone" th:field="*{telefone}"/>
+				</div>
+				
+				<div class="form-group  col-sm-4" Sig:classforerror="email">
+					<label for="email" class="control-label">E-mail</label>
+					<input type="text" class="form-control" id="email" th:field="*{email}"/>
+				</div>
+				
+				<div class="form-group  col-sm-4 Sig-required" Sig:classforerror="inscricaoEstadual">
+					<label for="inscricaoEstadual" class="control-label">Estadual</label>
+					<input type="text" class="form-control" id="inscricaoEstadual" th:field="*{inscricaoEstadual}"/>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="form-group  col-sm-4">
+					<label for="regimeTributario" class="control-label">Regime tributário</label>
+					<input type="text" class="form-control" id="regimeTributario" th:field="*{regimeTributario}"/>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="form-group  col-sm-4">
+					<label for="logradouro">Logradouro</label>
+					<input type="text" class="form-control" id="logradouro" th:field="*{endereco.logradouro}"/>
+				</div>
+				
+				<div class="form-group  col-sm-4">
+					<label for="numero">Número</label>
+					<input type="text" class="form-control" id="numero" th:field="*{endereco.numero}"/>
+				</div>
+				
+				<div class="form-group  col-sm-4">
+					<label for="complemento">Complemento</label>
+					<input type="text" class="form-control" id="complemento" th:field="*{endereco.complemento}"/>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="form-group  col-sm-4">
+					<label for="cep">CEP</label>
+					<input type="text" class="form-control  js-cep" id="cep" th:field="*{endereco.cep}"/>
+				</div>
+				
+				<div class="form-group  col-sm-4">
+					<label for="estado">Estado</label>
+					<select id="estado" class="form-control" th:field="*{endereco.estado}">
+	                    <option value="">Selecione o estado</option>
+	                    <option th:each="estado : ${estados}" th:value="${estado.codigo}" th:text="${estado.nome}">São Paulo</option>
+	                </select>
+				</div>
+				
+				<div class="form-group  col-sm-4">
+					<label  for="cidade">Cidade</label>
+					<div class="bw-field-action">
+						<input type="hidden" id="inputHiddenCidadeSelecionada" th:value="*{endereco.cidade} != null ? *{endereco.cidade.codigo}"/>
+						<select id="cidade" class="form-control" data:url="@{/cidades}" th:field="*{endereco.cidade}">
+						</select>
+						
+						<div class="bw-field-action__icon  js-img-loading" style="display: none">
+							<img th:src="@{/images/mini-loading.gif}"/>
+						</div>
+					</div>
+				</div>
+				
+				<div class="form-group  col-sm-2">
+					<label for="cep">Bairro</label>
+					<input type="text" class="form-control" id="bairro" th:field="*{endereco.bairro}"/>
+				</div>
+				
+				<div class="form-group  col-sm-2">
+					<label for="cep">Pais</label>
+					<input type="text" class="form-control" id="pais" th:field="*{endereco.pais}"/>
+				</div>
+				
+			</div>
+			
+			<div class="row">
+				
+				<div class="form-group  col-sm-4">
+					<label for="observacao" class="control-label">Observação</label>
+					<textarea cols="4" class="form-control" id="observacao" th:field="*{observacao}"></textarea>
+				</div>
+			
+			</div>
+			
+			<button type="submit" class="btn  btn-primary">Salvar</button>				
+		</form>
+	</div>
+</section>
+
+<th:block layout:fragment="javascript-extra">
+	<script th:src="@{/javascripts/empresa.mascara-cpf-cnpj.js}"></script>
+	<script th:src="@{/javascripts/empresa.combo-estado-cidade.js}"></script>
+</th:block>
+
+</html>

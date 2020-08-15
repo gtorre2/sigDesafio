@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: sigDesafio
+Implementation-Version: 1.0.0-SNAPSHOT
+Built-By: gusta
+Implementation-Vendor-Id: com.sig
+Build-Jdk: 1.8.0_241
+Implementation-URL: http://projects.spring.io/spring-boot/spring-boot-
+ starter-parent/sigDesafio/
+Created-By: Maven Integration for Eclipse
+
